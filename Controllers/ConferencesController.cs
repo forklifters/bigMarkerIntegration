@@ -14,20 +14,32 @@ namespace bigMarkerIntegration.Controllers
     public class ConferencesController : Controller
     {
 
+        public static bool firstViewAll = true;
         public async Task<IActionResult> ViewAll()
         {
-            var lines = System.IO.File.ReadLines(@"bigMarkerCreds.env");
-            ViewData["Message"] = "Hello there, List of Conferences:";
+            if( firstViewAll){
+                var lines = System.IO.File.ReadLines(@"bigMarkerCreds.env");
+                ViewData["Message"] = "Hello there, List of Conferences:";
 
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create("https://www.bigmarker.com/api/v1/conferences/");
-            request.Headers["API-KEY"] = lines.ElementAt(0).ToString();
-            request.Method = "GET";
-            var response = await request.GetResponseAsync();
-            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            //var responseString =  response.GetResponseStream().;
+                HttpWebRequest request = (HttpWebRequest) WebRequest.Create("https://www.bigmarker.com/api/v1/conferences/");
+                request.Headers["API-KEY"] = lines.ElementAt(0).ToString();
+                request.Method = "GET";
+                //Gettin the response 
+                var response = await request.GetResponseAsync();
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                //Converting the response to Json Onbject
+                JObject joResponse = JObject.Parse(responseString);
+                var ConferencesArray = (JArray) joResponse["conferences"];
+                
+                //Adding the conferences to the repository
+                foreach (JObject conf in ConferencesArray){
+                    ConferencesRepo.add(new Conference(conf));
+                }
+                ViewData["respString"] = responseString;
 
-            //ViewData["Message"] = "Conference Created";
-            ViewData["respString"] = responseString;
+                firstViewAll = false;
+            }
+            
             //return View();
             //return RedirectToLocal(returnUrl);
             return View();
@@ -118,6 +130,12 @@ namespace bigMarkerIntegration.Controllers
 
         public IActionResult Register()
         {
+            return View();
+        }
+
+        public IActionResult Enter(string id)
+        {
+            
             return View();
         }
 

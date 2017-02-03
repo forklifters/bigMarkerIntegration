@@ -17,7 +17,7 @@
 {
     <li>
             <!-- Trigger the modal with a button -->
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#@conference.id"+ @conference.id>@conference.Topic</button>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#@conference.id"+ @conference.id>@conference.Title</button>
             <!-- Modal -->
         <div class="container">
             <div class="modal fade" id="@conference.id" role="dialog">
@@ -27,18 +27,21 @@
                 <div class="modal-content">
                     <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Conference Topic: @conference.Topic</h4>
+                    <h4 class="modal-title">Conference Title: @conference.Title</h4>
                     </div>
                     <div class="modal-body">
                     <p>Some text in the modal.</p>
                     <div>
-                        <a href="@conference.startUrl">Start conference</a>
+                        <a href="@conference.ConferenceAddress">Go to conference</a>
                     </div>
                     <div>
                         <span>Conference ID: </span> @conference.id
                     </div>
+                    <div>
+                        <span>Presenter : @conference.Presenters.ElementAt(0).first_name </span>
+                    </div>
                     <div ng-app="myapp">
-                        <span>Join URL:</span><input id="foo" value="@conference.joinUrl">
+                        <span>Join URL:</span><input id="foo" value="something">
                         <!-- Trigger -->
                         <button class="btn" ngclipboard data-clipboard-target="#foo">
                             <span>Copy to clipboard</span><span class="glyphicon glyphicon-book"></span>                            
