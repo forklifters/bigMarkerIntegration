@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Conferences";
+}
+
+
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src="https://cdn.rawgit.com/zenorocha/clipboard.js/master/dist/clipboard.min.js"></script>
+
+<script src="~/lib/ngclipboard/dist/ngclipboard.js"></script>
+
+<h2>@ViewData["Message"]</h2>
+<h2>@ViewData["respString"]</h2>
+
+<div>
+    <ul>
+@foreach (var conference in ConferencesRepo.getAll())
+{
+    <li>
+            <!-- Trigger the modal with a button -->
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#@conference.id"+ @conference.id>@conference.Topic</button>
+            <!-- Modal -->
+        <div class="container">
+            <div class="modal fade" id="@conference.id" role="dialog">
+                <div class="modal-dialog">
+                
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Conference Topic: @conference.Topic</h4>
+                    </div>
+                    <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                    <div>
+                        <a href="@conference.startUrl">Start conference</a>
+                    </div>
+                    <div>
+                        <span>Conference ID: </span> @conference.id
+                    </div>
+                    <div ng-app="myapp">
+                        <span>Join URL:</span><input id="foo" value="@conference.joinUrl">
+                        <!-- Trigger -->
+                        <button class="btn" ngclipboard data-clipboard-target="#foo">
+                            <span>Copy to clipboard</span><span class="glyphicon glyphicon-book"></span>                            
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-default">Update</button>
+                    <form asp-controller="Conferences" asp-action="Delete" method="POST">
+                        <input type="hidden" name="ValueIneed" value="@conference.id" />
+                        <button type="submit" class="btn btn-default">Delete</button>
+                    </form>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                
+                </div>
+            </div>
+            
+            </div>
+    </li>
+
+}
+    </ul>
+</div>
+
+<a asp-controller="Conferences" asp-action="Create">Create Conference</a>
