@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net;
+using System.Text;
 using bigMarkerIntegration.Models.ConferencesViewModels;
 using Newtonsoft.Json.Linq;
 using System.IO;
@@ -17,7 +18,7 @@ namespace bigMarkerIntegration.Controllers
         public static bool firstViewAll = true;
         public async Task<IActionResult> ViewAll()
         {
-            if( firstViewAll){
+            //if( firstViewAll){
                 var lines = System.IO.File.ReadLines(@"bigMarkerCreds.env");
                 ViewData["Message"] = "Hello there, List of Conferences:";
 
@@ -38,7 +39,7 @@ namespace bigMarkerIntegration.Controllers
                 ViewData["respString"] = responseString;
 
                 firstViewAll = false;
-            }
+           // }
             
             //return View();
             //return RedirectToLocal(returnUrl);
@@ -64,23 +65,23 @@ namespace bigMarkerIntegration.Controllers
                     var lines = System.IO.File.ReadLines(@"bigMarkerCreds.env");
                     var values = new Dictionary<string, string>
                     {
-                        { "api_key", lines.ElementAt(0).ToString() },
-                        { "api_secret", lines.ElementAt(1).ToString() },
-                        { "host_id" , lines.ElementAt(2).ToString()},
-                        { "type", model.Type},
-                        { "topic", model.Topic }
+                        { "channel_id",model.ChannelID},
+                        { "title", model.Title},
+                        { "start_time" , model.StartTime},
+                        { "purpose", model.Purpose},
+                        { "duration", model.Duration }
                     };
-                    //client.DefaultRequestHeaders.Add("","");
+                    client.DefaultRequestHeaders.Add("API_KEY",lines.ElementAt(0).ToString());
                     var content = new FormUrlEncodedContent(values);
-                    var response = await client.PostAsync("https://api.zoom.us/v1/Conference/create", content);
+                    var response = await client.PostAsync("https://www.bigmarker.com/api/v1/conferences", content);
                     var responseString = await response.Content.ReadAsStringAsync();
-                    JObject joResponse = JObject.Parse(responseString);
-                    var startUrl = joResponse["start_url"].ToString();
-                    ConferencesRepo.add(new Conference(joResponse));
-                    ViewData["Message"] = "Conference Created";
-                    ViewData["startUrl"] = startUrl;
-                    //return View();
-                    return RedirectToLocal(returnUrl);
+                    //JObject joResponse = JObject.Parse(responseString);
+                    //var startUrl = joResponse["start_url"].ToString();
+                    //ConferencesRepo.add(new Conference(joResponse));
+                    ViewData["Message"] = responseString;
+                    //ViewData["startUrl"] = startUrl;
+                    return View();
+                    //return RedirectToLocal(returnUrl);
                 }
             }
 
@@ -133,8 +134,47 @@ namespace bigMarkerIntegration.Controllers
             return View();
         }
 
-        public IActionResult Enter(string id)
+        public async Task<IActionResult> Enter(string cid)
         {
+            
+            var lines = System.IO.File.ReadLines(@"bigMarkerCreds.env");
+           
+           /* HttpWebRequest request = (HttpWebRequest) WebRequest.Create("https://www.bigmarker.com/api/v1/conferences/enter");
+            request.Headers["API-KEY"] = lines.ElementAt(0).ToString();
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            var postData = "id="+cid;
+                postData += "&attendee_name=Nabeel Abubaker&attendee_email=nabeel20055@gmail.com";
+            var data = Encoding.ASCII.GetBytes(postData);
+
+            using (var strm = await request.GetRequestStreamAsync()){
+                strm.Write(data, 0, data.Length);
+            }
+            
+
+            //Gettin the response 
+            var response = await request.GetResponseAsync();
+            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+            //Converting the response to Json Onbject*/
+
+            using (var client = new HttpClient())
+                {
+                    
+                    var values = new Dictionary<string, string>
+                    {
+                        { "attendee_name", "Nabil" },
+                        { "id", cid },
+                        { "attendee_email" , "nabeel20055@gmail.com"},
+                    };
+                    client.DefaultRequestHeaders.Add("API-KEY",lines.ElementAt(0).ToString());
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await client.PostAsync("https://www.bigmarker.com/api/v1/conferences/enter", content);
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    JObject joResponse = JObject.Parse(responseString);
+                    ViewData["Message"] = responseString;
+                    //ViewData["enterToken"] = joResponse["enter_token"].ToString();
+                    //ViewData["enterUri"] = joResponse["enter_uri"].ToString(); 
+                }            
             
             return View();
         }

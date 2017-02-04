@@ -10,23 +10,24 @@
 <form asp-controller="Conferences" asp-action="Create" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
 <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="Topic" class="col-md-2 control-label"></label>
+        <label asp-for="Title" class="col-md-2 control-label"></label>
         <div class="col-md-10">
-            <input asp-for="Topic" class="form-control" />
-            <span asp-validation-for="Topic" class="text-danger"></span>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="Type" class="col-md-2 control-label"></label>
-        <div class=" col-md-10 input-group radio">
-            <!--input asp-for="Type" class="form-control" /-->
-            <ul asp-for="Type" class="answers">
-                <input type="radio" name="Type" value="1" id="q1a"><label for="q1a">Instant Conference (Only used for host to start it as soon as created)</label><br/>
-                <input type="radio" name="Type" value="2" id="q1b"><label for="q1b">Normal scheduled Conference</label><br/>
-                <input type="radio" name="Type" value="3" id="q1c"><label for="q1c">A recurring Conference with no fixed time</label><br/>
-                <input type="radio" name="Type" value="8" id="q1d"><label for="q1d">A recurring Conference with fixed time.</label><br/>
-            </ul>
-            <!--span asp-validation-for="Type" class="text-danger"></span-->
+        <label asp-for="ChannelID" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="ChannelID" class="form-control" />
+            <span asp-validation-for="ChannelID" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Purpose" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Purpose" class="form-control" />
+            <span asp-validation-for="Purpose" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">

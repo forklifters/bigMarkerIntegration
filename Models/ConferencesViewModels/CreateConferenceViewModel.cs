@@ -9,20 +9,27 @@ namespace bigMarkerIntegration.Models.ConferencesViewModels
     public class CreateConferenceViewModel
     {
         [Required]
-        [Display(Name = "Topic")]
-        public string Topic { get; set; }
+        [Display(Name = "Title")]
+        public string Title { get; set; }
 
         [Required]
-        [Display(Name = "Type")]
-        public string Type { get; set; }
+        [Display(Name = "Channel ID")]
+        public string ChannelID { get; set; }
 
-        [DataType(DataType.Time)]
+        [Required]
+        [DataTypeAttribute(DataType.DateTime)]
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:hh:mm tt}")]
         [Display(Name = "Start Time")]
         public string StartTime { get; set; }
 
+        
+        [Display(Name = "Purpose")]
+        [DataType(DataType.MultilineText)]
+        public string Purpose { get; set; }
+
         [DataType(DataType.Duration)]
         [Display(Name = "Duration")]
-        public string Duration { get; set; }
+        public string Duration {get; set;}
 
     }
 }
